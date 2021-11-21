@@ -1,3 +1,5 @@
+// Part 2
+
 let log = document.getElementById('log');
 log.addEventListener('click', function () 
 {
@@ -49,6 +51,8 @@ assert.addEventListener('click', function ()
     }
     if (op == '/' && op2 != 0){
         expected = op1 / op2;
+    } else {
+        expected = 'Infinity';
     }
 
     console.assert(expected == result);
@@ -117,5 +121,61 @@ endTimer.addEventListener('click', function ()
 let trace = document.getElementById('trace');
 trace.addEventListener('click', function () 
 {
-    console.trace();
+    const funct = () => { console.trace(); };
+    funct();
+});
+
+// Part 3
+let tryBtn = document.getElementById('try');
+tryBtn.addEventListener('click', function()
+{
+    let op1 = parseInt(document.getElementById('first-num').value);
+    let op2 = parseInt(document.getElementById('second-num').value);
+    let op = document.getElementById('operator').value;
+
+    try {
+        if (op == '/'){
+            testDivide(op1, op2);
+        }
+
+    } catch (err) {
+        alert("Error with computation");
+        alert(err);
+    }
+
+    try {
+        if(op == '+'){
+            if (!Number.isInteger(op1 + op2)) {
+                throw Error;
+            }
+        }
+    } catch (err) {
+        alert("Error with adding");
+    }
+});
+
+// Part 4
+class DivisionError extends Error {
+    constructor(msg) {
+        super(msg);
+        this.name = "DivisionError";
+    }
+}
+
+function testDivide(a, b) {
+    if (b == 0){
+        throw new DivisionError("Cannot divide by zero");
+    } else {
+        return a / b;
+    }
+}
+
+//Part 5
+let globalError = document.getElementById("globalError");
+globalError.addEventListener('click', function(){
+
+    window.addEventListener('error', function(msg){
+        console.log(msg);
+        Rollbar.error(msg);
+    });
 });
